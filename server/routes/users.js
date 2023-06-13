@@ -44,15 +44,14 @@ router.delete('/:id', async (req, res, next) => {
   }
   try {
     const id = req.params.id;
-    const doesIdExist = await User.findByPk(+id);
-    if (doesIdExist === null) {
+    const userToDelete = await User.findByPk(id);
+    if (userToDelete === null) {
       const err = new Error();
       err.status = 404;
       throw err;
     }
-    res.status(204);
-    await User.deleteUser(id);
-    res.send('User Deleted');
+    await userToDelete.destroy();
+    res.status(204).send('User Deleted');
   } catch (error) {
     next(error);
   }
@@ -74,7 +73,7 @@ router.post('/', async (req, res, next) => {
 router.put('/:id', async (req, res, next) => {
   try {
     const id = req.params.id;
-    const findId = await User.findByPk(+id);
+    const findId = await User.findByPk(id);
     if (findId === null) {
       const err = new Error();
       err.status = 404;
